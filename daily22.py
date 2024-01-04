@@ -16,18 +16,27 @@
 from typing import List
 
 class Solution:
-    def minOperations(self, nums: List[int]) -> int: # nums is a list of integers
-        from collections import Counter
+    def minOperations(self, nums: List[int]) -> int:
+        # Create a Counter object from nums. This will count the occurrences of each number in nums.
         mp = Counter(nums)
         
-        count = 0 # number of operations
-        for t in mp.values(): # t is the value of the key
-            if t == 1: # if there is only one value
-                return -1 # return -1 
-            count += t // 3 # count is the number of operations
-            if t % 3: # if there is a remainder
-                count += 1 # add 1 to the count
+        # Initialize a variable count to 0. This will keep track of the total number of operations.
+        count = 0
+        
+        # Iterate over the values in mp (which are the counts of each number in nums).
+        for t in mp.values():
+            # If t is 1, return -1. This means there's a number in nums that only appears once, so it's impossible to empty the array.
+            if t == 1:
+                return -1
+            
+            # Add t // 3 to count. This is the number of times you can perform the operation on this number.
+            count += t // 3
+            
+            # If t has a remainder when divided by 3 (t % 3), add 1 to count. This means one more operation is needed for this number.
+            if t % 3:
+                count += 1
                 
+        # After the loop, return count. This is the minimum number of operations needed to empty the array.
         return count
 
 # test cases
