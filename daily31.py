@@ -1,38 +1,43 @@
-# Two strings are considered close if you can attain one from the other using the following operations:
-# Operation 1: Swap any two existing characters. For example, abcde -> aecdb
-# Operation 2: Transform every occurrence of one existing character into another existing character, and do the same with the other character. For example, aacabb -> bbcbaa (all a's turn into b's, and all b's turn into a's)
-# You can use the operations on either string as many times as necessary.
-# Given two strings, word1 and word2, return true if word1 and word2 are close, and false otherwise.
+# Find players with zero or one losses
+# You are given an integer array matches where matches[i] = [winneri, loseri] indicates that the player winneri defeated player loseri in a match.
+
 
 # Constraints:
 
-# 1 <= word1.length, word2.length <= 105
-# word1 and word2 contain only lowercase English letters
+# 1 <= matches.length <= 105
+# matches[i].length == 2
+# 1 <= winneri, loseri <= 105
+# winneri != loseri
+# All matches[i] are unique.
 
-from collections import Counter
+from typing import List
+import itertools
+
+from collections import defaultdict
 
 class Solution:
-    def closeStrings(self, word1: str, word2: str) -> bool:
-        if len(word1) != len(word2): # if word1 and word2 are not the same length, return False
-            return False
+    def findWinners(self, matches):
+        losses = [0] * 100001
 
-        counter1 = Counter(word1)
-        counter2 = Counter(word2)
+        for winner, loser in matches:
+            if losses[winner] == 0:
+                losses[winner] = -1
 
-        # Check if the two words have the same unique characters
-        if set(counter1.keys()) != set(counter2.keys()):
-            return False
+            if losses[loser] == -1:
+                losses[loser] = 1
+            else:
+                losses[loser] += 1
 
-        # Check if the two words have the same frequency of characters
-        if sorted(counter1.values()) != sorted(counter2.values()):
-            return False
+        zero_loss = [i for i in range(1, 100001) if losses[i] == -1]
+        one_loss = [i for i in range(1, 100001) if losses[i] == 1]
 
-        return True
+        return [zero_loss, one_loss]
 
-# test cases
-        
-# create an instance of the Solution class
-sol = Solution()
-# call the method on the instance of the class, passing nums as an argument
-print(sol.closeStrings("abc", "bca"))  # Output: True
-print(sol.closeStrings("a", "aa"))  # Output: False
+# Tests
+solution = Solution()
+matches = [[1,3],[2,3],[3,6],[5,6],[5,7],[4,5],[4,8],[4,9],[10,4],[10,9]]
+print(solution.findWinners(matches))
+
+
+
+
